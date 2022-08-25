@@ -20,9 +20,7 @@ public class PreSignUpFunction implements RequestHandler<CognitoUserPoolPreSignU
         JDBCConnect jdbcConnect = new JDBCConnect(context);
         UserDTO dto = new UserDTO();
         dto.setEmail(email.getEmail());
-        long id = jdbcConnect.saveUser(dto);
-        dto.setId(id);
-        jdbcConnect.inserRole(dto);
+        jdbcConnect.saveUser(dto);
         return s;
     }
 
