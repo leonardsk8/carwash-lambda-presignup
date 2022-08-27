@@ -1,40 +1,15 @@
+# SAM template for CodeBuild
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: >
-  sign-up
-  Sample SAM Template for sign-up
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-  Function:
-    Timeout: 20
-
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Lambda application.
 Resources:
-  PreSignUpFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  function:
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: PreSignUpFunction
-      Handler: sign-up.App::handleRequest
+      CodeUri: target/sign-up-1.0-SNAPSHOT.jar
+      Handler: com.carwash.lambda.PreSignUpFunction::handleRequest
       Runtime: java11
-      Architectures:
-      - x86_64
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1 # More info about tiered compilation https://aws.amazon.com/blogs/compute/optimizing-aws-lambda-function-performance-for-java/
-      Events:
-        PreSignUp:
-          Type: CloudWatchEvent # More info about CloudWatchEvent Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#cloudwatchevent
-          Properties:
-            Pattern:
-              source:
-                - aws.ec2
-              detail-type:
-                - EC2 Instance State-change Notification
-
-Outputs:
-  PreSignUpFunction:
-    Description: "PreSignUp Lambda Function ARN"
-    Value: !GetAtt PreSignUpFunction.Arn
-  PreSignUpFunctionIamRole:
-    Description: "Implicit IAM Role created for PreSignUp function"
-    Value: !GetAtt PreSignUpFunctionRole.Arn
+      Description: Java function
+      MemorySize: 128
+      Timeout: 10
+      Tracing: Active
