@@ -67,20 +67,4 @@ public class JDBCConnect {
         }
         return idGenerated;
     }
-
-    public String updateUser(UserDTO userDTO) {
-        LambdaLogger logger = context.getLogger();
-        logger.log("Invoked JDBCSample.getCurrentTime");
-        String result = "unavailable";
-        String sql = "UPDATE carwash.user t SET t.email_confirmed = 1 WHERE t.email = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1,userDTO.getEmail());
-            boolean execute = stmt.execute();
-            logger.log(SUCCESSFULLY_EXECUTED_QUERY + execute);
-        }catch (Exception e) {
-        e.printStackTrace();
-        logger.log(CAUGHT_EXCEPTION + e.getMessage());
-    }
-        return result;
-    }
 }
