@@ -20,13 +20,28 @@ public class JDBCConnect {
     }
 
 
+    public boolean findUserByEmail(String email){
+        LambdaLogger logger = context.getLogger();
+        logger.log("Invoked GetUser");
+        String sql="select * from carwash.user where email=?";
+        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD); PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.log(CAUGHT_EXCEPTION + e.getMessage());
+            return false;
+        }
+    }
+
     public long saveUser(UserDTO userDTO) {
         LambdaLogger logger = context.getLogger();
-        logger.log("Invoked JDBCSample.getCurrentTime");
+        logger.log("Invoked Save User");
         long idGenerated= 0L;
         String sql = "INSERT INTO carwash.user (firts_name, last_name, birth_date," +
-                " address, gender, location, email, phone, city_id,photo, enable, email_confirmed, phone_confirmed, completed, role_id,wash_id)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+                " address, gender, location, email, phone, city_id,photo, enable, email_confirmed, phone_confirmed, completed, role_id,wash_id,terms_and_conditions)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD); PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
             stmt.setNull(1, Types.VARCHAR);
             stmt.setNull(2, Types.VARCHAR);
@@ -44,6 +59,7 @@ public class JDBCConnect {
             stmt.setBoolean(14, false);
             stmt.setInt(15, 1);
             stmt.setNull(16, Types.INTEGER);
+            stmt.setBoolean(17, false);
 
 
             int affectedRows = stmt.executeUpdate();
